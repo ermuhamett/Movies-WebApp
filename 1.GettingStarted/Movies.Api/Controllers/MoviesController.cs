@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Movies.Api.Mapping;
-using Movies.Application.Models;
-using Movies.Application.Repositories;
 using Movies.Application.Services;
 using Movies.Contracts.Requests;
 
 namespace Movies.Api.Controllers;
 
+[Authorize]
 [ApiController]
 public class MoviesController:ControllerBase
 {
@@ -24,7 +24,8 @@ public class MoviesController:ControllerBase
         await _movieService.CreateAsync(movie, token);
         return CreatedAtAction(nameof(GetById), new { idOrSlug = movie.Id }, movie);
     }
-
+    
+    [AllowAnonymous]
     [HttpGet(ApiEndpoints.Movies.Get)]
     public async Task<IActionResult> GetById([FromRoute] string idOrSlug, CancellationToken token)
     {
@@ -40,6 +41,7 @@ public class MoviesController:ControllerBase
         return Ok(response);
     }
 
+    [AllowAnonymous]
     [HttpGet(ApiEndpoints.Movies.GetAll)]
     public async Task<IActionResult> GetAll(CancellationToken token)
     {
