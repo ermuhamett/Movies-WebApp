@@ -74,9 +74,8 @@ public class MovieRepository:IMovieRepository
             left join ratings r on m.id=r.movieid
             left join ratings myr on m.id=myr.movieid
                  and myr.userid=@userid
-            where id=@id 
+            where m.slug=@slug 
             group by id, userrating
-            select * from movies where slug=@slug
             """,new { slug, userid }, cancellationToken:token));
         if (movie is null)
         {
@@ -107,7 +106,7 @@ public class MovieRepository:IMovieRepository
             left join ratings r on m.id=r.movieid
             left join ratings myr on m.id=myr.movieid
                  and myr.userid=@userid
-            group by id
+            group by id, userrating
             """, new{userid}, cancellationToken:token));
         return result.Select(x => new Movie
         {
