@@ -36,7 +36,7 @@ public class RatingController:ControllerBase
     }
 
     [Authorize]
-    [HttpGet]
+    [HttpGet(ApiEndpoints.Ratings.GetUserRatings)]
     public async Task<IActionResult> GetUserRatings(CancellationToken token)
     {
         var userId = HttpContext.GetUserId();
