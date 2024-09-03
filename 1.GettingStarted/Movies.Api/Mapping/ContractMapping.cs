@@ -6,6 +6,9 @@ namespace Movies.Api.Mapping;
 
 public static class ContractMapping
 {
+    /// <summary>
+    /// Данный мапер вызывается как статический метод у класса CreateMovieRequest. После static указывается тип который возвращает маппер
+    /// </summary>
     public static Movie MapToMovie(this CreateMovieRequest request)
     {
         return new Movie
@@ -55,5 +58,20 @@ public static class ContractMapping
             Rating = x.Rating,
             Slug = x.Slug
         });
+    }
+
+    public static GetAllMoviesOptions MapToOptions(this GetAllMoviesRequest request)
+    {
+        return new GetAllMoviesOptions
+        {
+            Title = request.Title,
+            YearOfRelease = request.Year
+        };
+    }
+
+    public static GetAllMoviesOptions WithUser(this GetAllMoviesOptions options, Guid? userId)
+    {
+        options.UserId = userId;
+        return options;
     }
 }
