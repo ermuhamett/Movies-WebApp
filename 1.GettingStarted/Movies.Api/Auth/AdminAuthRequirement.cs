@@ -14,7 +14,7 @@ public class AdminAuthRequirement:IAuthorizationHandler,IAuthorizationRequiremen
 
     public Task HandleAsync(AuthorizationHandlerContext context)
     {
-        if (!context.User.HasClaim(AuthConstants.AdminUserPolicyName, "true"))
+        if (context.User.HasClaim(AuthConstants.AdminUserPolicyName, "true"))
         {
             context.Succeed(this);
             return Task.CompletedTask;
