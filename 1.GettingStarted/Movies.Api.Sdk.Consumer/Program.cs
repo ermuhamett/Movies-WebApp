@@ -11,16 +11,45 @@ var services = new ServiceCollection();
 services
     .AddHttpClient()
     .AddSingleton<AuthTokenProvider>()
-    .AddRefitClient<IMoviesApi>(s=>new RefitSettings
+    .AddRefitClient<IMoviesApi>(s => new RefitSettings
     {
-        AuthorizationHeaderValueGetter = async (request, cancellationToken) => await s.GetRequiredService<AuthTokenProvider>().GetTokenAsync()
+        AuthorizationHeaderValueGetter = async (request, cancellationToken) =>
+        {
+            var token = await s.GetRequiredService<AuthTokenProvider>().GetTokenAsync();
+            Console.WriteLine($"Token used: {token}");
+            return token;
+        }
     })
-    .ConfigureHttpClient(x=>
-        x.BaseAddress=new Uri("https://localhost:7026"));
+    .ConfigureHttpClient(x =>
+    {
+        x.BaseAddress = new Uri("https://localhost:7026");
+        x.DefaultRequestHeaders.Add("Accept", "application/json");
+    });
 
 var provider = services.BuildServiceProvider();
 var moviesApi = provider.GetRequiredService<IMoviesApi>();
-//var movie=await moviesApi.GetMoviesAsync("nick-the-greek-2023");
+
+var movie = await moviesApi.GetMoviesAsync("nick-the-greek-2023");
+Console.WriteLine("Movie retrieved successfully");
+
+var newMovie = await moviesApi.CreateMovieAsync(new CreateMovieRequest
+{
+    Title = "The Boys",
+    YearOfRelease = 2018,
+    Genres = new[] { "Action" }
+});
+Console.WriteLine("Movie created successfully");
+
+await moviesApi.UpdateMovieAsync(newMovie.Id, new UpdateMovieRequest
+{
+    Title = "The Boys",
+    YearOfRelease = 2018,
+    Genres = new[] { "Action", "Superheros" }
+});
+Console.WriteLine("Movie updated successfully");
+
+await moviesApi.DeleteMovieAsync(newMovie.Id);
+Console.WriteLine("Movie deleted successfully");
 
 var request = new GetAllMoviesRequest
 {

@@ -6,7 +6,7 @@ namespace Movies.Api.Sdk.Consumer;
 public class AuthTokenProvider
 {
     private readonly HttpClient _httpClient;
-    private string _cachedToken=string.Empty;
+    private string _cachedToken = string.Empty;
     private static readonly SemaphoreSlim Lock = new(1, 1);
 
     public AuthTokenProvider(HttpClient httpClient)
@@ -23,6 +23,7 @@ public class AuthTokenProvider
             var expiryDateTime = UnixTimeStampToDateTime(int.Parse(expiryTimeText));
             if (expiryDateTime > DateTime.UtcNow)
             {
+                Console.WriteLine("Using cached token");
                 return _cachedToken;
             }
         }
@@ -32,7 +33,7 @@ public class AuthTokenProvider
         {
             userId = Guid.NewGuid(),
             email = "nick@nickchapsas.com",
-            customClaims = new Dictionary<string, bool>
+            customClaims = new Dictionary<string, object>
             {
                 { "admin", true },
                 { "trusted_member", true }
@@ -40,6 +41,7 @@ public class AuthTokenProvider
         });
         var newToken = await response.Content.ReadAsStringAsync();
         _cachedToken = newToken;
+        Console.WriteLine("New token obtained");
         Lock.Release();
         return newToken;
     }
