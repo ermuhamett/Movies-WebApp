@@ -34,7 +34,8 @@ public class MoviesController:ControllerBase
         var movie = request.MapToMovie();
         await _movieService.CreateAsync(movie, token);
         await _outputCacheStore.EvictByTagAsync("movies", token);
-        return CreatedAtAction(nameof(GetById), new { idOrSlug = movie.Id }, movie);
+        var response = movie.MapToResponse();
+        return CreatedAtAction(nameof(GetById), new { idOrSlug = movie.Id }, response);
     }
     
     
