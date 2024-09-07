@@ -2,12 +2,19 @@
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
 using Movies.Api.Sdk;
+using Movies.Api.Sdk.Consumer;
 using Movies.Contracts.Requests;
 
 //var moviesApi=RestService.For<IMoviesApi>("https://localhost:7026");
 
 var services = new ServiceCollection();
-services.AddRefitClient<IMoviesApi>()
+services
+    .AddHttpClient()
+    .AddSingleton<AuthTokenProvider>()
+    .AddRefitClient<IMoviesApi>(s=>new RefitSettings
+    {
+        AuthorizationHeaderValueGetter = async (request, cancellationToken) => await s.GetRequiredService<AuthTokenProvider>().GetTokenAsync()
+    })
     .ConfigureHttpClient(x=>
         x.BaseAddress=new Uri("https://localhost:7026"));
 
