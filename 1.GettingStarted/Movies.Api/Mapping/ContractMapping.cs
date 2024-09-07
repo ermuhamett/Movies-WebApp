@@ -6,6 +6,9 @@ namespace Movies.Api.Mapping;
 
 public static class ContractMapping
 {
+    /// <summary>
+    /// Данный мапер вызывается как статический метод у класса CreateMovieRequest. После static указывается тип который возвращает маппер
+    /// </summary>
     public static Movie MapToMovie(this CreateMovieRequest request)
     {
         return new Movie
@@ -30,18 +33,53 @@ public static class ContractMapping
     {
         return new MovieResponse
         {
-            Id = Guid.NewGuid(),
+            Id = movie.Id,
             Title = movie.Title,
+            Slug = movie.Slug,
+            Rating = movie.Rating,
+            UserRating = movie.UserRating,
             YearOfRelease = movie.YearOfRelease,
             Genres = movie.Genres.ToList()
         };
     }
 
-    public static MoviesResponse MapToResponse(this IEnumerable<Movie> movies)
+    public static MoviesResponse MapToResponse(this IEnumerable<Movie> movies, int page, int pageSize, int totalCount)
     {
         return new MoviesResponse
         {
+            Page=page,
+            PageSize = pageSize,
+            Total = totalCount,
             Items = movies.Select(MapToResponse)
         };
+    }
+    public static IEnumerable<MovieRatingResponse> MapToResponse(this IEnumerable<MovieRating> ratings)
+    {
+        return ratings.Select(x => new MovieRatingResponse
+        {
+            MovieId = x.MovieId,
+            Rating = x.Rating,
+            Slug = x.Slug
+        });
+    }
+
+    public static GetAllMoviesOptions MapToOptions(this GetAllMoviesRequest request)
+    {
+        return new GetAllMoviesOptions
+        {
+            Title = request.Title,
+            YearOfRelease = request.Year,
+            SortField = request.SortBy?.Trim('+', '-'),
+            SortOrder = request.SortBy is null ? SortOrder.Unsorted:
+                request.SortBy.StartsWith('-') ? SortOrder.Descending : SortOrder.Ascending,
+            Page=request.Page,
+            PageSize = request.PageSize
+        };
+    }
+
+    public static GetAllMoviesOptions WithUser(this GetAllMoviesOptions options, Guid? userId)
+    {
+        options.UserId = userId;
+        return options;
     }
 }
