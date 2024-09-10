@@ -17,7 +17,8 @@ public static class GetUserRatingEndpoint
                     var ratings = await ratingService.GetRatingsForUserAsync(userId!.Value, token);
                     return TypedResults.Ok(ratings);
                 })
-            .WithName(Name);
+            .WithName(Name)
+            .RequireAuthorization();
         return app;
     }
 }

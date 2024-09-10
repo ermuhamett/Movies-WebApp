@@ -11,7 +11,7 @@ public static class RateMovieEndpoint
     public static IEndpointRouteBuilder MapRateMovie(this IEndpointRouteBuilder app)
     {
         app.MapPut(ApiEndpoints.Movies.Rate,
-                async (Guid id, RateMovieRequest request, 
+                async (Guid id, RateMovieRequest request,
                     HttpContext context, IRatingService ratingService,
                     CancellationToken token) =>
                 {
@@ -19,7 +19,8 @@ public static class RateMovieEndpoint
                     var result = await ratingService.RateMovieAsync(id, request.Rating, userId!.Value, token);
                     return result ? Results.Ok() : Results.NotFound();
                 })
-            .WithName(Name);
+            .WithName(Name)
+            .RequireAuthorization();
         return app;
     }
 }
