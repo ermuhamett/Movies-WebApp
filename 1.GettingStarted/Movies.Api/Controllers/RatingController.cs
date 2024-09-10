@@ -8,7 +8,7 @@ using Movies.Contracts.Requests;
 using Movies.Contracts.Responses;
 
 namespace Movies.Api.Controllers;
-
+/*
 [ApiController]
 [ApiVersion(1.0)]
 public class RatingController:ControllerBase
@@ -52,4 +52,4 @@ public class RatingController:ControllerBase
         var ratingsResponse = rating.MapToResponse();
         return Ok(ratingsResponse);
     }
-}
+}*/

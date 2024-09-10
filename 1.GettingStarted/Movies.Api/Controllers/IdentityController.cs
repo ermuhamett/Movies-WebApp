@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Movies.Contracts.Requests;
 
 namespace Movies.Api.Controllers;
-
+/*
 public class IdentityController:ControllerBase
 {
     private const string TokenSecret = "ForTheLoveOfGodStoreAndLoadThisSecurely";
@@ -60,4 +60,4 @@ public class IdentityController:ControllerBase
         var jwt = tokenHandler.WriteToken(token);
         return Ok(jwt);
     }
-}
+}*/

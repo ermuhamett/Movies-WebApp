@@ -2,6 +2,7 @@
 using Movies.Api.Mapping;
 using Movies.Application.Services;
 using Movies.Contracts.Requests;
+using Movies.Contracts.Responses;
 
 namespace Movies.Api.Endpoints.Movies;
 
@@ -26,7 +27,8 @@ public static class GetAllMoviesEndpoint
                     movieCount);
                 return TypedResults.Ok(moviesResponse);
             })
-            .WithName(Name);
+            .WithName(Name)
+            .Produces<MovieResponse>(StatusCodes.Status200OK);
         return app;
     }
 }

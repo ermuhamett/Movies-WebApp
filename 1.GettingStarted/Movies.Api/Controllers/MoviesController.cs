@@ -10,7 +10,7 @@ using Movies.Contracts.Responses;
 
 namespace Movies.Api.Controllers;
 
-
+/*
 [ApiController]
 [ApiVersion(1.0)]
 public class MoviesController:ControllerBase
@@ -109,4 +109,4 @@ public class MoviesController:ControllerBase
         await _outputCacheStore.EvictByTagAsync("movies", token);
         return Ok();
     }
-}
+}*/
